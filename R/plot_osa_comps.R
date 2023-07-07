@@ -16,7 +16,7 @@ plot_osa_comps <- function(obs, exp, pearson, ages, years, Neff,
   stopifnot(all.equal(ncol(obs), ncol(exp), ncol(pearson),
                            length(ages)))
   filename <- paste0(stock,"_",survey,".pdf")
-  pdf(here::here('figs', filename), onefile=TRUE, width=7, height=7)
+  pdf(here::here(filename), onefile=TRUE, width=7, height=7)
   on.exit(dev.off())
   ## Neff <- ceiling(Neff)
   o <- round(Neff*obs/rowSums(obs),0); p=exp/rowSums(exp)
