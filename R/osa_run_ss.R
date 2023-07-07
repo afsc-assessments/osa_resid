@@ -19,7 +19,8 @@ OSA_run_SS<-function(model="Model23.1.0",ages=0:12, fleet=2, sx=1,stck='EBS_COD'
    p <- as.matrix(p[,-1])
    pearson <- as.matrix(pearson[,-1])
    Neff<-round(data.table::data.table(mods1[[1]]$agedbase)[Bin==ages[1] & Sex==sx]$effN)
-   plot_osa_comps(o,p, pearson, ages=ages, years=years, Neff=Neff, stock=paste("A",sx,stck,model,sep="_"), survey=surv)
+   plot_osa_comps(o,p, pearson, ages=ages, years=years, Neff=Neff, 
+   stock=paste("A_sex=",sx,stck,model,sep="_"), survey=surv)
   }
 
 
@@ -39,6 +40,7 @@ OSA_run_SS<-function(model="Model23.1.0",ages=0:12, fleet=2, sx=1,stck='EBS_COD'
    p <- as.matrix(p[,-1])
    pearson <- as.matrix(pearson[,-1])
    Neff<-round(data.table::data.table(mods1[[1]]$lendbase)[Bin==lengths[1]& Fleet==fleet & Sex==sx]$effN)
-   plot_osa_comps(o,p, pearson, ages=lengths, years=years, Neff=Neff, stock=paste("L",sx,stck,model,sep="_"), survey=surv)
+   plot_osa_comps(o,p, pearson, ages=lengths, years=years, Neff=Neff, 
+   stock=paste("L_sex=",sx,stck,model,sep="_"), survey=surv)
   }
 
