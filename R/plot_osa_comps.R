@@ -3,19 +3,20 @@
 #' @param obs,exp,pearson the observed, expected and Pearson
 #'   residual matrices with rows as years and columns as ages (or
 #'   lengths)
-#' @param ages,years vectors giving the ages and years
+#' @param index,years vectors giving the index of ages (or length) and years
+#' @param index_label character value indicating 'age' or 'length bin' depending on comp type
 #' @param stock,survey characters given the stock and survey,
 #' used to create filename stock_survey.pdf
 #' @return returns nothing but creates a PDF file in the working
 #' directory
 #'
-plot_osa_comps <- function(obs, exp, pearson, ages, years, Neff,
+plot_osa_comps <- function(obs, exp, pearson, index, years, index_label, Neff,
                            stock, survey){
   stopifnot(all.equal(nrow(obs), nrow(exp), nrow(pearson),
                       length(years)))
   stopifnot(all.equal(ncol(obs), ncol(exp), ncol(pearson),
-                           length(ages)))
-  filename <- paste0(stock,"_",survey,".pdf")
+                           length(index)))
+  filename <- paste0(stock,"_",survey,"_", gsub('\\s', '_', index_label), ".pdf")
   pdf(here::here('figs', filename), onefile=TRUE, width=7, height=7)
   on.exit(dev.off())
   ## Neff <- ceiling(Neff)
@@ -29,33 +30,35 @@ plot_osa_comps <- function(obs, exp, pearson, ages, years, Neff,
   plot(res)
   ## compare to Pearson side by side
   mat <- t(matrix(res, nrow=nrow(res), ncol=ncol(res)))
-  dimnames(mat) <- list(year=years, age=ages[-1])
+  dimnames(mat) <- list(year=years, index=index[-1])
   reslong <- reshape2::melt(mat, value.name='resid')
-  g1 <- ggplot(reslong, aes(year, age, size=abs(resid),
+  g1 <- ggplot(reslong, aes(year, index, size=abs(resid),
                             color=resid>0)) + geom_point() +
-    ggtitle('OSA w/o age 1') + ylim(range(ages))
-  dimnames(pearson) <- list(year=years, age=ages)
+    ggtitle(paste0('OSA w/o ', index_label, ' 1')) + ylim(range(index)) +
+    ylab(index_label)
+  dimnames(pearson) <- list(year=years, index=index)
   pearsonlong <- reshape2::melt(pearson, value.name='resid')
-  g2 <- ggplot(pearsonlong, aes(year, age, size=abs(resid),
+  g2 <- ggplot(pearsonlong, aes(year, index, size=abs(resid),
                                 color=resid>0)) + geom_point() +
-    ggtitle('Pearson')
+    ggtitle('Pearson') + ylab(index_label)
   print(cowplot::plot_grid(g1,g2, nrow=2))
 
   ## ind is age/len bin to drop
-  for(ind in 1:length(ages)){
+  for(ind in 1:length(index)){
     ## assumes first column dropped so put it there
-    ages2 <- ages[-ind]
+    index2 <- index[-ind]
     o2 <- cbind(o[,ind], o[,-ind])
     p2 <- cbind(p[,ind], p[,-ind])
     res <- resMulti(t(o2), t(p2))
     ## not sure why these fail sometimes?
     if(!all(is.finite(res))) {warning('failed when ind=',ind); break}
     mat <- t(matrix(res, nrow=nrow(res), ncol=ncol(res)))
-    dimnames(mat) <- list(year=years, age=ages2)
+    dimnames(mat) <- list(year=years, index=index2)
     reslong <- reshape2::melt(mat, value.name='resid')
-    g <- ggplot(reslong, aes(year, age, size=abs(resid),
+    g <- ggplot(reslong, aes(year, index, size=abs(resid),
                              color=resid>0)) + geom_point()+
-      ggtitle(paste('OSA w/o age',ages[ind])) + ylim(range(ages))
+      ggtitle(paste0('OSA w/o ', index_label, ' ', index[ind])) + ylim(range(index)) +
+      ylab(index_label)
     print(g)
   }
   message("wrote file ", filename)
