@@ -7,17 +7,23 @@
 #' @param index_label character value indicating 'age' or 'length bin' depending on comp type
 #' @param stock,survey characters given the stock and survey,
 #' used to create filename stock_survey.pdf
+#' @param outpath folder name for output, e.g. 'figs'
 #' @return returns nothing but creates a PDF file in the working
 #' directory
 #'
 plot_osa_comps <- function(obs, exp, pearson, index, years, index_label, Neff,
-                           stock, survey){
+                           stock, survey, outpath = ''){
   stopifnot(all.equal(nrow(obs), nrow(exp), nrow(pearson),
                       length(years)))
-  stopifnot(all.equal(ncol(obs), ncol(exp), ncol(pearson),
-                           length(index)))
+  stopifnot(all.equal(ncol(obs), ncol(exp), ncol(pearson), length(index)))
   filename <- paste0(stock,"_",survey,"_", gsub('\\s', '_', index_label), ".pdf")
-  pdf(here::here('figs', filename), onefile=TRUE, width=7, height=7)
+  
+  if(is.null(outpath)) {
+    pdf(here::here(filename), onefile=TRUE, width=7, height=7)
+  } else {
+    pdf(here::here(outpath, filename), onefile=TRUE, width=7, height=7)
+  }
+  
   on.exit(dev.off())
   ## Neff <- ceiling(Neff)
   o <- round(Neff*obs/rowSums(obs),0); p=exp/rowSums(exp)

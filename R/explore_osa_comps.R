@@ -2,9 +2,8 @@
 ## https://github.com/fishfollower/compResidual#composition-residuals
 ## for installation instructions
 
-TMB:::install.contrib("https://github.com/vtrijoulet/OSA_multivariate_dists/archive/main.zip")
+# TMB:::install.contrib("https://github.com/vtrijoulet/OSA_multivariate_dists/archive/main.zip")
 ## devtools::install_github("fishfollower/compResidual/compResidual")
-pak::pkg_install("fishfollower/compResidual/compResidual")
 
 library(compResidual)
 library(ggplot2)
@@ -36,7 +35,7 @@ pearson <- repfile$Survey_1_Pearson_residuals_age_comp[,ages]
 years <- datfile$srv_acyrs1
 Neff <- datfile$multN_srv1 # this gets rounded
 plot_osa_comps(o,p, pearson, index=ages, years=years, index_label='age', Neff=Neff,
-               stock='GOApollock', survey='shelikof')
+               stock='GOApollock', survey='shelikof', outpath='figs')
 
 ## obs and expected (p), rows=years, columns=ages
 ages <- 1:10
@@ -46,7 +45,7 @@ pearson <- repfile$Survey_2_Pearson_residuals_age_comp[,ages]
 years <- datfile$srv_acyrs2
 Neff <- datfile$multN_srv2 # this gets rounded
 plot_osa_comps(o,p, pearson, index=ages, years=years, index_label='age', Neff=Neff,
-               stock='GOApollock', survey='nmfs_bt')
+               stock='GOApollock', survey='nmfs_bt', outpath='figs')
 
 ages <- 1:10
 o <- repfile$Survey_3_observed_and_expected_age_comp[,ages]
@@ -55,7 +54,7 @@ pearson <- repfile$Survey_3_Pearson_residuals_age_comp[,ages]
 years <- datfile$srv_acyrs3
 Neff <- datfile$multN_srv3 # this gets rounded
 plot_osa_comps(o,p, pearson, index=ages, years=years, index_label='age', Neff=Neff,
-               stock='GOApollock', survey='adfg')
+               stock='GOApollock', survey='adfg', outpath='figs')
 
 ages <- 1:10
 o <- repfile$Survey_6_observed_and_expected_age_comp[,ages]
@@ -64,7 +63,7 @@ pearson <- repfile$Survey_6_Pearson_residuals_age_comp[,ages]
 years <- datfile$srv_acyrs6
 Neff <- datfile$multN_srv6 # this gets rounded
 plot_osa_comps(o,p, pearson, index=ages, years=years, index_label='age', Neff=Neff,
-               stock='GOApollock', survey='summer_at')
+               stock='GOApollock', survey='summer_at', outpath='figs')
 
 ages <- 1:10
 o <- repfile$Fishery_observed_and_expected_age_comp[,ages]
@@ -73,9 +72,11 @@ pearson <- repfile$Fishery_Pearson_residuals_age_comp[,ages]
 years <- datfile$fshyrs
 Neff <- datfile$multN_fsh
 plot_osa_comps(o,p, pearson, index=ages, years=years, index_label='age', Neff=Neff,
-               stock='GOApollock', survey='fishery')
+               stock='GOApollock', survey='fishery', outpath='figs')
 
-# GOA RE/BS lengths ----
+# GOA RE/BS ----
+
+#lengths
 rebslens <- readRDS(here::here('data', 'goa_rebs_lenscomps.RDS'))
 for(i in 1:length(unique(rebslens$index))) {
   lens <- unique(rebslens$length)
@@ -86,10 +87,10 @@ for(i in 1:length(unique(rebslens$index))) {
   years <- tmp %>% distinct(year, n) %>% pull(year)
   Neff <- tmp %>% distinct(year, n) %>% pull(n)
   plot_osa_comps(o, p, pearson, index=lens, years=years, index_label='length bin', Neff=Neff,
-                 stock='GOArougheye', survey=unique(rebslens$index)[i])
+                 stock='GOArougheye', survey=unique(rebslens$index)[i], outpath='figs')
 }
 
-# GOA RE/BS ages
+# ages
 rebsage <- readRDS(here::here('data', 'goa_rebs_agecomps.RDS'))
 for(i in 1:length(unique(rebsage$index))) {
   ages <- unique(rebsage$age)
@@ -100,5 +101,5 @@ for(i in 1:length(unique(rebsage$index))) {
   years <- tmp %>% distinct(year, n) %>% pull(year)
   Neff <- tmp %>% distinct(year, n) %>% pull(n)
   plot_osa_comps(o, p, pearson, index=ages, years=years, index_label='age', Neff=Neff,
-                 stock='GOArougheye', survey=unique(rebsage$index)[i])
+                 stock='GOArougheye', survey=unique(rebsage$index)[i], outpath='figs')
   }
