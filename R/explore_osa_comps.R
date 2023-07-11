@@ -77,7 +77,7 @@ plot_osa_comps(o,p, pearson, index=ages, years=years, index_label='age', Neff=Ne
 # GOA RE/BS ----
 
 #lengths
-rebslens <- readRDS(here::here('data', 'goa_rebs_lenscomps.RDS'))
+rebslens <- readRDS(here::here('data', 'goa_rebs_lencomps.RDS'))
 for(i in 1:length(unique(rebslens$index))) {
   lens <- unique(rebslens$length)
   tmp <- rebslens %>% dplyr::filter(index == unique(rebslens$index)[i])
