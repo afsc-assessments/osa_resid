@@ -27,7 +27,6 @@ colSums(p)
 repfile <- readRDS(here::here('data', 'repfile.RDS'))
 datfile <- readRDS(here::here('data', 'datfile.RDS'))
 
-
 ages <- 3:10
 o <- repfile$Survey_1_observed_and_expected_age_comp[,ages]
 p <- repfile$Survey_1_observed_and_expected_age_comp[,10+ages]
@@ -86,7 +85,7 @@ for(i in 1:length(unique(rebslens$index))) {
   pearson <-  tmp %>% pivot_wider(id_cols = year, names_from = length, values_from = pearson) %>% select(-year) %>% as.matrix()
   years <- tmp %>% distinct(year, n) %>% pull(year)
   Neff <- tmp %>% distinct(year, n) %>% pull(n)
-  plot_osa_comps(o, p, pearson, index=lens, years=years, index_label='length bin', Neff=Neff,
+  plot_osa_comps(o, p, pearson, index=lens, years=years, index_label='length', Neff=Neff,
                  stock='GOArougheye', survey=unique(rebslens$index)[i], outpath='figs')
 }
 
@@ -103,3 +102,32 @@ for(i in 1:length(unique(rebsage$index))) {
   plot_osa_comps(o, p, pearson, index=ages, years=years, index_label='age', Neff=Neff,
                  stock='GOArougheye', survey=unique(rebsage$index)[i], outpath='figs')
   }
+
+# sablefish
+
+# lengths
+sablelens <- readRDS(here::here('data', 'sable_lencomps.RDS'))
+for(i in 1:length(unique(sablelens$index))) {
+  lens <- unique(sablelens$length)
+  tmp <- sablelens %>% dplyr::filter(index == unique(sablelens$index)[i])
+  o <- tmp %>% pivot_wider(id_cols = year, names_from = length, values_from = obs) %>% select(-year) %>% as.matrix()
+  p <- tmp %>% pivot_wider(id_cols = year, names_from = length, values_from = pred) %>% select(-year) %>% as.matrix()
+  pearson <-  tmp %>% pivot_wider(id_cols = year, names_from = length, values_from = pearson) %>% select(-year) %>% as.matrix()
+  years <- tmp %>% distinct(year, n) %>% pull(year)
+  Neff <- tmp %>% distinct(year, n) %>% pull(n)
+  plot_osa_comps(o, p, pearson, index=lens, years=years, index_label='length', Neff=Neff,
+                 stock='AKsablefish', survey=unique(sablelens$index)[i], outpath='figs')
+}
+# ages
+sableage <- readRDS(here::here('data', 'sable_agecomps.RDS'))
+for(i in 1:length(unique(sableage$index))) {
+  ages <- unique(sableage$age)
+  tmp <- sableage %>% dplyr::filter(index == unique(sableage$index)[i])
+  o <- tmp %>% pivot_wider(id_cols = year, names_from = age, values_from = obs) %>% select(-year) %>% as.matrix()
+  p <- tmp %>% pivot_wider(id_cols = year, names_from = age, values_from = pred) %>% select(-year) %>% as.matrix()
+  pearson <-  tmp %>% pivot_wider(id_cols = year, names_from = age, values_from = pearson) %>% select(-year) %>% as.matrix()
+  years <- tmp %>% distinct(year, n) %>% pull(year)
+  Neff <- tmp %>% distinct(year, n) %>% pull(n)
+  plot_osa_comps(o, p, pearson, index=ages, years=years, index_label='age', Neff=Neff,
+                 stock='AKsablefish', survey=unique(sableage$index)[i], outpath='figs')
+}
