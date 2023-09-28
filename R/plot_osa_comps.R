@@ -17,13 +17,13 @@ plot_osa_comps <- function(obs, exp, pearson, index, years, index_label, Neff,
                       length(years)))
   stopifnot(all.equal(ncol(obs), ncol(exp), ncol(pearson), length(index)))
   filename <- paste0(stock,"_",survey,"_", gsub('\\s', '_', index_label), ".pdf")
-  
+
   if(is.null(outpath)) {
     pdf(here::here(filename), onefile=TRUE, width=7, height=7)
   } else {
     pdf(here::here(outpath, filename), onefile=TRUE, width=7, height=7)
   }
-  
+
   on.exit(dev.off())
   ## Neff <- ceiling(Neff)
   o <- round(Neff*obs/rowSums(obs),0); p=exp/rowSums(exp)
@@ -51,10 +51,10 @@ plot_osa_comps <- function(obs, exp, pearson, index, years, index_label, Neff,
 
   ## ind is age/len bin to drop
   for(ind in 1:length(index)){
-    ## assumes first column dropped so put it there
+    ## assumes **last column** dropped so put it there
     index2 <- index[-ind]
-    o2 <- cbind(o[,ind], o[,-ind])
-    p2 <- cbind(p[,ind], p[,-ind])
+    o2 <- cbind(o[,-ind], o[,ind])
+    p2 <- cbind(p[,-ind], p[,ind])
     res <- resMulti(t(o2), t(p2))
     ## not sure why these fail sometimes?
     if(!all(is.finite(res))) {warning('failed when ind=',ind); break}
