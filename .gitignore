@@ -2,3 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+R/osa_run_ss.R
+figs/GOApollock_shelikof.pdf
+R/explore_osa_comps-AKCSL1102-SB21.R
+R/osa_run_ss-AKCSL1102-SB21.R
+R/osa_run_ss.R
+R/plot_osa_comps-AKCSL1102-SB21.R
