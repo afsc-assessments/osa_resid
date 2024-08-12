@@ -112,8 +112,8 @@ plot_osa_comps2 <- function(obs, exp, pearson, index, years=yrs, index_label, Ne
   sdnr$ID<-1:nrow(sdnr)
   sdnr<-sdnr[order(sdnr),]
 
-  HCI<-sqrt(qchisq(.95, (length(res1[[1]])-1))/(length(res1[[1]])-1))
-  LCI<-sqrt(qchisq(.05, (length(res1[[1]])-1))/(length(res1[[1]])-1))
+  HCI<-sqrt(qchisq(.975, (length(res1[[1]])-1))/(length(res1[[1]])-1))
+  LCI<-sqrt(qchisq(.025, (length(res1[[1]])-1))/(length(res1[[1]])-1))
   n=1
   if(N>1){n=trunc(N/2)}
 
